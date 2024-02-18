@@ -4,7 +4,10 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import RatingDisplay from './RatingDisplay';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addtoCart, removeFromCart  } from '../redux/cartSlice';
+
 
 export interface IProduct {
   count: number;
@@ -23,26 +26,29 @@ export interface IProduct {
 
 type ProductProps = {
   product: IProduct;
-  onAddToCart: (product: IProduct) => void;
-  onRemovefromCart: (product: IProduct) => void;
 };
 
-export const Product: React.FC<ProductProps> = ({ product, onAddToCart,onRemovefromCart }) => {
-  const [isInCart, setIsInCart] = useState(false);
+export const Product: React.FC<ProductProps> = ({ product }) => {
+ const dispatch=useDispatch()
+ const cartItems = useSelector((state: any) => state.cart.cart);
+ const [isInCart, setIsInCart] = useState(cartItems.some((item: IProduct) => item.id === product.id));
 
+ useEffect(() => {
+  setIsInCart(cartItems.some((item: IProduct) => item.id === product.id));
+}, [cartItems, product.id]);
 
   const handleAddToCart = () => {
-    onAddToCart(product);
+    dispatch(addtoCart(product))
     setIsInCart(true);
   };
 
   const handleRemoveFromCart = () => {
-    onRemovefromCart(product)
+    dispatch(removeFromCart(product))
     setIsInCart(false);
   };
 
   return (
-    <div className="shadow text-black m-4 pb-28 rounded overflow-hidden">
+    <div className="shadow-2xl text-black m-3 rounded overflow-hidden">
       <Swiper
         slidesPerView={1}
         spaceBetween={10}
@@ -58,9 +64,9 @@ export const Product: React.FC<ProductProps> = ({ product, onAddToCart,onRemovef
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="p-2 flex items-end justify-between">
-        <div className="">
-          <h1>{product.title}</h1>
+      <div className="p-2 py-4 flex items-end justify-between">
+        <div className="grid gap-2">
+          <h1 className='whitespace-nowrap truncate w-auto font-semibold'>{product.title}</h1>
           <p>₹  {product.price}</p>
           <p>{product.category}</p>
           <RatingDisplay rating={product.rating} />
@@ -74,7 +80,6 @@ export const Product: React.FC<ProductProps> = ({ product, onAddToCart,onRemovef
             Add to cart
           </button>
         )}
-
       </div>
     </div>
   );

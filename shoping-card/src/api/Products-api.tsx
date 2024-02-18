@@ -9,15 +9,9 @@ export const axiosInstance=axios.create({
     }
 })
 
-// axiosInstance.interceptors.request.use((config)=>{
-//     const token=cookes()
-//         config.headers.Authorization='Bearer'+token;
-//         return config
-    
-// })
 
-export const fetchProducts = async (page:number,search:string) => {
-    const response = await axiosInstance.get(`products?q=${search}&_page=${page}`);
+export const fetchProducts = async ( typeSearch:string,page:number,search:string) => {
+    const response = await axiosInstance.get(`products?${typeSearch}=${search}&_page=${page}`);
     return response.data;
 };
 

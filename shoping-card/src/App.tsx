@@ -1,15 +1,19 @@
 
 import { AppRoute } from './routers/router'
-import { Providers } from './providers'
+import { ProvidersQuery } from './providers'
+import{Provider}from "react-redux"
+import {store} from './redux/store'
 
 
 
 export default function App() {
   return (
     <>
-      <Providers>
+    <Provider store={store}>
+      <ProvidersQuery>
         <AppRoute />
-      </Providers>
+      </ProvidersQuery>
+      </Provider>
     </>
   )
 }

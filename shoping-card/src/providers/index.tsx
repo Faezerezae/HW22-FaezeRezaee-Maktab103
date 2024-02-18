@@ -20,7 +20,7 @@ interface Props{
     children:ReactNode
 }
 
-  export const Providers=({children}:Props)=> {
+  export const ProvidersQuery=({children}:Props)=> {
     return (
       <QueryClientProvider client={queryClient}>
        {children}
